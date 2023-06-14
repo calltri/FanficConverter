@@ -15,15 +15,10 @@ def convert_to_ao3(fanfic_code):
         try:
             span_index = ao3_code.index("<span class=\"c4\">")
             span_index = ao3_code.find("</span>", span_index)
-            #replace with </strike>
-
-            ao3_code = ao3_code[:span_index] + "</strike>" + ao3_code[span_index + len("</span>"):]
-
-
+            #remove docs c4 formatting and replace with simple <strike> formatting
+            ao3_code = ao3_code[:span_index] + "</strike> " + ao3_code[span_index + len("</span><span class=\"c0\">") + len("&nbsp;"):]
             
-           
-            
-            ao3_code = ao3_code.replace("<span class=\"c4\">", "<strike>", 1)
+            ao3_code = ao3_code.replace("</span><span class=\"c4\">", "<strike>", 1)
             print(ao3_code[span_index-50: span_index+40])
             
 
