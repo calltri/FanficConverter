@@ -43,6 +43,7 @@ def isolate_header(fanfic_code):
 
 
 def partition_html_into_chapters(header, fanfic_code):
+    # NOTE: DIVIDES BY h3 HEADER
     # partition code into several chapters
     # input: html text
     # output: list of html chapters
@@ -50,11 +51,18 @@ def partition_html_into_chapters(header, fanfic_code):
     while(True):
         try:
             # if there is a chapter partition the code
-            ch_index = fanfic_code.index(CHAPTER_TITLE_FORMATTING, 6)
-            fanfic_sections.append("<html>" + header + fanfic_code[0:ch_index] + "</html>")
-            fanfic_code = fanfic_code[ch_index:]
+            first_index = fanfic_code.index(CHAPTER_TITLE_FORMATTING)
+            # check if another chapter exists
+            next_index = fanfic_code.find(CHAPTER_TITLE_FORMATTING, first_index + 1)
+            if next_index != -1:
+                fanfic_sections.append("<html>" + header + "<body>" + fanfic_code[first_index:next_index] + "</body></html>")
+                fanfic_code = fanfic_code[next_index:]
+            else:
+                # Body end tag already exists
+                fanfic_sections.append("<html>" + header + "<body>" + fanfic_code[first_index:] + "</html>")
+                break
         except ValueError:
-            fanfic_sections.append("<html>" + header + fanfic_code + "</html>")
+            print("ERROR: No h3 header exists")
             break
     return fanfic_sections
 
