@@ -4,7 +4,7 @@ import sys
 import os
 import codecs
 
-STRIKE_FORMATTING = "<span class=\"c5\">"
+STRIKE_FORMATTING = "<span class=\"c1\">"
 CHAPTER_TITLE_FORMATTING = "<h3"
 
 def read_html_file(file_name):
@@ -19,16 +19,30 @@ def convert_strikes_to_ao3(fanfic_code):
     # returns: new HTML text
     ao3_code = fanfic_code
 
-    
+    # TODO google doc line is text-decoration:line-through
+    # need to find that and then the c# associated with it
+
+    #TODO error
+    # dfjdkfjskjfksl </span><span class="c1">even more useless
+    # Types of endings:
+    # </span><span>&nbsp;ignorant</span><span>. 
+    # </span><span>&nbsp;had a particularly good relationship</span><span>.
+    # </span><span>&nbsp;disappeared. 
+    # </span><span class="c2">&nbsp;her
+    # </span><span class="c2"> - lacks $nbsp;
+
+    ao3_code = ao3_code.replace("&nbsp;", " ")
     while(True):
         try:
             span_index = ao3_code.index(STRIKE_FORMATTING)
             span_index = ao3_code.find("</span>", span_index)
+            #find the end of the next span
+            last_index = ao3_code.find(">", span_index + len("</span><span")) + 2
+            print(ao3_code[span_index:last_index])
             #remove docs c4 formatting and replace with simple <strike> formatting
-            ao3_code = ao3_code[:span_index] + "</strike> " + ao3_code[span_index + len("</span><span class=\"c0\">") + len("&nbsp;"):]
+            ao3_code = ao3_code[:span_index] + "</strike> " + ao3_code[last_index:]
             
             ao3_code = ao3_code.replace("</span>" + STRIKE_FORMATTING, "<strike>", 1)
-            print(ao3_code[span_index-50: span_index+40])
         except ValueError:
             break
     return ao3_code
