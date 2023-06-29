@@ -73,27 +73,19 @@ def main():
     if num_args == 1:
         print("Error, please list fiction name")
         return
-    file_name = sys.argv[1]
+    file = sys.argv[1]
     #fanfic_file = os.path.join("doc_fanfics", file_name)
-    
-    fanfic_code = read_html_file(file_name)
-
-    
+    fanfic_code = read_html_file(file)
+    file_name = file[len(".\\doc_fanfics\\\\"):-len(".html")]
     
     fanfic_code = convert_strikes_to_ao3(fanfic_code)
     header, fanfic_code = isolate_header(fanfic_code)
     fanfic_sections = partition_html_into_chapters(header, fanfic_code)
     iterator = 0
     for section in fanfic_sections:
-        new_file = os.path.join("output_fanfics", file_name + str(iterator) + ".html")
-        f = open(new_file, "w")
+        f = open(".\\output_fanfics\\" + file_name + "_" + str(iterator) + ".html", "w")
         f.write(section)
-        i += 1
-    
-
-    
-    print("hello")
-
+        iterator += 1
     return
 
 if __name__ == "__main__":
